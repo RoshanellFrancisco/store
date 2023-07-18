@@ -50,9 +50,9 @@ app.get("/api/products/:id", async (req, res) => {
         })
         console.log(product)
         if (product === null ){
-            res.status(404)
+            res.status(404).send("Product does not exist. Please enter another id")
         } else{
-            res.send(product)
+            res.status(200).send(product)
         }
 	} catch (e) {
 		return res.status(500).json({ e });
