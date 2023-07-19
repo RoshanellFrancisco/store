@@ -13,7 +13,7 @@
   "scripts": {
   
     
-  "start": "nodemon index.js"
+  "start": "nodemon -r ./tracing.cjs index.js"
   
   },
   
@@ -24,6 +24,12 @@
   "license": "ISC",
   
   "dependencies": {
+  
+    
+  "@honeycombio/opentelemetry-node": "^0.5.0",
+  
+    
+  "@opentelemetry/auto-instrumentations-node": "^0.38.0",
   
     
   "@prisma/client": "^5.0.0",
