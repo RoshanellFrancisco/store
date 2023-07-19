@@ -27,7 +27,7 @@ app.post("/api/products", cors(), async (req, res) => {
 		const result = await prisma.Product.create(
             {data: newProduct}
 		);
-        res.status(201).send(result)
+        res.status(201).send(newProduct)
 	
 	} catch (e) {
 		// console.log(e);
@@ -50,9 +50,10 @@ app.get("/api/products/:id", async (req, res) => {
         })
         console.log(product)
         if (product === null ){
-            res.status(404).send("Product does not exist. Please enter another id")
+            res.status(404).send("Product does not exist. Please enter another id.")
         } else{
-            res.status(200).send(product)
+            res.status(201).send(product)
+	
         }
 	} catch (e) {
 		return res.status(500).json({ e });
@@ -68,12 +69,13 @@ app.get("/api/products", async (req, res) => {
 	try {
 		const products = await prisma.Product.findMany()
         console.log(products)
-        res.send(products)
+        res.status(200).send(products)
+	
         if(products.length === 0){
             res.send([])
         }
 	} catch (e) {
-		return res.status(400).json({ e });
+		return res.status(500).json({ e });
 	}
 });
 
@@ -84,16 +86,56 @@ app.get("/api/products", async (req, res) => {
 //     * Response Code: 404 - Product does not exist.
 
 app.put("/api/products/:id", async (req, res) => {
-	console.log(req.params.id);
+	console.log(req.params.id, "id");
+    const { name, description, imageUrl } = req.body;
 	try {
-        const updatedProduct = await prisma.Product.update({
-            where:{
-                id: req.params.id,
+        //     * Response Code: 200 - Returns the updated product.
+//     * Response Code: 400 - Request missing a product field
+//     * Response Code: 404 - Product does not exist.
+
+app.put("/api/products/:id", async (req, res) => {
+	console.log(req.params.id, "id");
+    const { name, description, imageUrl } = req.body;
+	try {
+        // defines existing product and how to identify it via id
+        const existingProduct = await prisma.Product.findUnique({
+            where: {
+              id: req.params.id,
             },
-            data: { published: true },
+          });
+      // if this porduct does not exist return error
+          if (!existingProduct) {
+            return res.status(404).json({ error: "Product not found" });
+          }
+      
+        const updatedProduct = await prisma.Product.update({
+            where: {
+                id: req.params.id,
+              },
+              data: {
+                name,
+                description,
+                imageUrl,
+              },
         })
-        console.log(updatedProduct)
-        res.json(updatedProduct)
+        console.log(updatedProduct, "updated product")
+        res.status(200).send(updatedProduct)
+	} catch (e) {
+		return res.status(400).json({ e });
+	}
+});
+        const updatedProduct = await prisma.Product.update({
+            where: {
+                id: req.params.id,
+              },
+              data: {
+                name,
+                description,
+                imageUrl,
+              },
+        })
+        console.log(updatedProduct, "updated product")
+        res.status(200).send(updatedProduct)
 	} catch (e) {
 		return res.status(400).json({ e });
 	}
@@ -105,12 +147,23 @@ app.put("/api/products/:id", async (req, res) => {
 //     * Response Code: 404 - Product does not exist.
 
 app.delete(`/api/products/:id`, async (req, res) => {
-    const { id } = req.params
-    const product = await prisma.Product.delete({
-      where: { id },
-    })
-    res.json(product)
-  })
+    try {
+      const { id } = req.params;
+      const product = await prisma.Product.delete({
+        where: { id },
+      });
+  
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+  
+      res.status(200).send(product);
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  });
+  
+
 
 
 
