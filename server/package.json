@@ -13,7 +13,7 @@
   "scripts": {
   
     
-  "start": "node -r ./tracing.cjs index.js"
+  "start": "nodemon -r ./tracing.cjs index.js"
   
   },
   
@@ -32,13 +32,28 @@
   "@opentelemetry/auto-instrumentations-node": "^0.38.0",
   
     
-  "@opentelemetry/instrumentation-express": "^0.33.0",
+  "@opentelemetry/exporter-trace-otlp-http": "^0.41.0",
   
     
-  "@opentelemetry/instrumentation-http": "^0.41.0",
+  "@opentelemetry/instrumentation": "^0.41.0",
+  
+    
+  "@opentelemetry/resources": "^1.15.0",
+  
+    
+  "@opentelemetry/sdk-trace-base": "^1.15.0",
+  
+    
+  "@opentelemetry/sdk-trace-node": "^1.15.0",
+  
+    
+  "@opentelemetry/semantic-conventions": "^1.15.0",
   
     
   "@prisma/client": "^5.0.0",
+  
+    
+  "@prisma/instrumentation": "^5.0.0",
   
     
   "@supabase/supabase-js": "^2.26.0",
