@@ -13,7 +13,7 @@
   "scripts": {
   
     
-  "start": "nodemon -r ./tracing.cjs index.js"
+  "start": "node -r ./tracing.cjs index.js"
   
   },
   
